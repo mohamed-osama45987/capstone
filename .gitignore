@@ -1,0 +1,68 @@
+# =========================================================================
+# Root-Level Tooling & CI/CD
+# =========================================================================
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*
+!.env.example
+
+# =========================================================================
+# Backend: Spring Boot & Maven
+# =========================================================================
+backend/target/
+backend/pom.xml.tag
+backend/pom.xml.releaseBackup
+backend/pom.xml.versionsBackup
+backend/pom.xml.next
+backend/release.properties
+backend/dependency-reduced-pom.xml
+backend/buildNumber.properties
+backend/.mvn/timing.properties
+backend/.mvn/wrapper/.maven-wrapper/
+
+# Do NOT ignore backend Maven Wrapper scripts
+!backend//.mvn/wrapper/maven-wrapper.jar
+!backend/mvnw
+!backend/mvnw.cmd
+
+# Spring Boot specific logs and caches
+backend/logs/
+backend/.sts4-cache/
+backend/.springBeans/
+backend/src/main/resources/application-local.yml
+backend/src/main/resources/application-local.properties
+
+# =========================================================================
+# Frontend: Vite & React (Node.js)
+# =========================================================================
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/*.local
+
+# Vite / Vitest / Playwright test outputs
+frontend/coverage/
+frontend/.nyc_output/
+frontend/.cache/
+
+# =========================================================================
+# IDEs & Text Editors (Applied across the monorepo)
+# =========================================================================
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# Eclipse / Spring Tool Suite (STS)
+.metadata/
+.classpath
+.project
+.settings/
+.factorypath
+
+# Visual Studio Code
+.vscode/
