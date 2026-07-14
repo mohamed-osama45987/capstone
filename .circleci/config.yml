@@ -51,16 +51,18 @@ jobs:
       enabled: true
     steps:
       - checkout
-      - setup_remote_docker:
-          version: 20.10.16
       - run:
           name: Build backend image
           command: |
-            docker build -t capstone-backend:latest ../backend
+            pwd
+            ls -la
+            docker build -t capstone-backend:latest backend
       - run:
           name: Build frontend image
           command: |
-            docker build -t capstone-frontend:latest ../frontend
+            pwd
+            ls -la
+            docker build -t capstone-frontend:latest frontend
 
 workflows:
   build-and-test:
