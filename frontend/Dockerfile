@@ -6,7 +6,7 @@ COPY package.json package-lock.json* ./
 COPY vite.config.js postcss.config.js tailwind.config.js ./
 COPY index.html ./
 COPY src ./src
-ARG VITE_API_URL=http://backend:8080
+ARG VITE_API_URL=${VITE_API_URL}
 ENV VITE_API_URL=${VITE_API_URL}
 RUN npm install
 RUN npm run build

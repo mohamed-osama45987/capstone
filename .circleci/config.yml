@@ -70,25 +70,25 @@ jobs:
             docker push $DOCKERHUB_USERNAME/capstone-frontend:latest
             docker push $DOCKERHUB_USERNAME/capstone-frontend:$CIRCLE_SHA1
 
-  # render-deploy:
-  #   machine:
-  #     enabled: true
-  #   steps:
-  #     - checkout
-  #     - run:
-  #         name: Trigger Render deploys
-  #         command: |
-  #           if [ -z "$RENDER_API_KEY" ] || [ -z "$RENDER_BACKEND_SERVICE_ID" ] || [ -z "$RENDER_FRONTEND_SERVICE_ID" ]; then
-  #             echo "Missing required Render environment variables"
-  #             exit 1
-  #           fi
-  #           for service_id in "$RENDER_BACKEND_SERVICE_ID" "$RENDER_FRONTEND_SERVICE_ID"; do
-  #             echo "Triggering Render deploy for $service_id"
-  #             curl -X POST "https://api.render.com/v1/services/$service_id/deploys" \
-  #               -H "Authorization: Bearer $RENDER_API_KEY" \
-  #               -H "Content-Type: application/json" \
-  #               -d '{}'
-  #           done
+  render-deploy:
+    machine:
+      enabled: true
+    steps:
+      - checkout
+      - run:
+          name: Trigger Render deploys
+          command: |
+            if [ -z "$RENDER_API_KEY" ] || [ -z "$RENDER_BACKEND_SERVICE_ID" ] || [ -z "$RENDER_FRONTEND_SERVICE_ID" ] || [ -z "$RENDER_POSTGRES_SERVICE_ID" ]; then
+              echo "Missing required Render environment variables"
+              exit 1
+            fi
+            for service_id in "$RENDER_BACKEND_SERVICE_ID" "$RENDER_FRONTEND_SERVICE_ID" "$RENDER_POSTGRES_SERVICE_ID"; do
+              echo "Triggering Render deploy for $service_id"
+              curl -X POST "https://api.render.com/v1/services/$service_id/deploys" \
+                -H "Authorization: Bearer $RENDER_API_KEY" \
+                -H "Content-Type: application/json" \
+                -d '{}'
+            done
 
 workflows:
   build-and-test:
@@ -99,6 +99,6 @@ workflows:
           requires:
             - frontend-test-build
             - backend-test-build
-      # - render-deploy:
-      #     requires:
-      #       - docker-publish
+      - render-deploy:
+          requires:
+            - docker-publish
