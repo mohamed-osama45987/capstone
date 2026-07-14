@@ -71,7 +71,3 @@ workflows:
           requires:
             - frontend-test-build
             - backend-test-build
-      - render-deploy:
-          requires:
-            - frontend-test-build
-            - backend-test-build
