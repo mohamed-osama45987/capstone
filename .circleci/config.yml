@@ -1,0 +1,77 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@5.0.1
+  maven: circleci/maven@2.0.0
+
+jobs:
+  frontend-test-build:
+    docker:
+      - image: cimg/node:20.8
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-frontend-node-modules-{{ checksum "frontend/package-lock.json" }}
+      - run:
+          name: Install frontend dependencies
+          command: |
+            cd frontend
+            npm install
+      - save_cache:
+          paths:
+            - frontend/node_modules
+          key: v1-frontend-node-modules-{{ checksum "frontend/package-lock.json" }}
+      - run:
+          name: Run frontend lint and test
+          command: |
+            cd frontend
+            npm run build
+
+  backend-test-build:
+    docker:
+      - image: cimg/openjdk:21.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-backend-m2-{{ checksum "backend/pom.xml" }}
+      - run:
+          name: Build backend
+          command: |
+            cd backend
+            mvn -B clean package -DskipTests
+      - save_cache:
+          paths:
+            - ~/.m2/repository
+          key: v1-backend-m2-{{ checksum "backend/pom.xml" }}
+
+  docker-build:
+    machine:
+      enabled: true
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.16
+      - run:
+          name: Build backend image
+          command: |
+            docker build -t capstone-backend:latest ../backend
+      - run:
+          name: Build frontend image
+          command: |
+            docker build -t capstone-frontend:latest ../frontend
+
+workflows:
+  build-and-test:
+    jobs:
+      - frontend-test-build
+      - backend-test-build
+      - docker-build:
+          requires:
+            - frontend-test-build
+            - backend-test-build
+      - render-deploy:
+          requires:
+            - frontend-test-build
+            - backend-test-build

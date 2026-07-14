@@ -4,7 +4,6 @@ import com.example.backend.model.Event;
 import com.example.backend.repository.EventRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EventService {
